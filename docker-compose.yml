@@ -21,7 +21,7 @@ services:
       db:
         condition: service_healthy
     ports:
-      - "${APP_PORT:-3000}:3000"
+      - "${APP_PORT:-3005}:3000"
     environment:
       DATABASE_URL: "postgresql://sip:${POSTGRES_PASSWORD:-sip_password_2025}@db:5432/sip_db"
       AUTH_SECRET: "${AUTH_SECRET:-sip-elact-production-secret-2025}"
@@ -30,6 +30,23 @@ services:
       AUTH_TRUST_HOST: "true"
     volumes:
       - uploads:/app/public/uploads
+    networks:
+      - default
+      - dokploy-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.sip.rule=Host(`elact.thecrayfish.tech`)"
+      - "traefik.http.routers.sip.entrypoints=websecure"
+      - "traefik.http.routers.sip.tls.certresolver=letsencrypt"
+      - "traefik.http.services.sip.loadbalancer.server.port=3000"
+      - "traefik.http.routers.sip-http.rule=Host(`elact.thecrayfish.tech`)"
+      - "traefik.http.routers.sip-http.entrypoints=web"
+      - "traefik.http.routers.sip-http.middlewares=redirect-to-https"
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+
+networks:
+  dokploy-network:
+    external: true
 
 volumes:
   postgres_data:

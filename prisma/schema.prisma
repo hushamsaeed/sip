@@ -1,0 +1,175 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  SUPER_ADMIN
+  MANAGER
+  VIEWER
+}
+
+enum UserStatus {
+  ACTIVE
+  OFFLINE
+  INVITED
+}
+
+enum ProductCategory {
+  SPIRITS
+  WINE
+  CHAMPAGNE
+  BEER
+}
+
+enum ProductStatus {
+  ACTIVE
+  LOW_STOCK
+  OUT_OF_STOCK
+  DRAFT
+}
+
+enum ClientType {
+  RESORT
+  LIVEABOARD
+}
+
+enum ClientStatus {
+  ACTIVE
+  SUSPENDED
+  INACTIVE
+}
+
+enum OrderStatus {
+  PROCESSING
+  IN_TRANSIT
+  DELIVERED
+  CANCELLED
+}
+
+enum ContentStatus {
+  PUBLISHED
+  DRAFT
+}
+
+model User {
+  id           String     @id @default(cuid())
+  email        String     @unique
+  passwordHash String
+  name         String
+  role         Role       @default(VIEWER)
+  avatar       String?
+  avatarColor  String     @default("#F59E0B")
+  status       UserStatus @default(ACTIVE)
+  lastActive   DateTime   @default(now())
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+}
+
+model Product {
+  id             String          @id @default(cuid())
+  name           String
+  sku            String          @unique
+  brand          String
+  category       ProductCategory
+  description    String?
+  price          Float
+  stock          Int             @default(0)
+  minOrderQty    Int             @default(1)
+  reorderPoint   Int             @default(10)
+  status         ProductStatus   @default(ACTIVE)
+  imageUrl       String?
+  tags           String[]        @default([])
+  available      Boolean         @default(true)
+  deliveryMethod String          @default("Standard Speedboat")
+  availableFrom  DateTime        @default(now())
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  orderItems     OrderItem[]
+}
+
+model Client {
+  id            String       @id @default(cuid())
+  name          String
+  type          ClientType
+  atoll         String
+  island        String?
+  contactPerson String?
+  phone         String?
+  email         String?
+  status        ClientStatus @default(ACTIVE)
+  avatarColor   String       @default("#0EA5E9")
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  orders        Order[]
+}
+
+model Order {
+  id             String          @id @default(cuid())
+  orderNumber    String          @unique
+  clientId       String
+  client         Client          @relation(fields: [clientId], references: [id])
+  status         OrderStatus     @default(PROCESSING)
+  carrier        String?
+  trackingNumber String?
+  deliveryTo     String?
+  shippingCost   Float           @default(0)
+  taxAmount      Float           @default(0)
+  notes          String?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  items          OrderItem[]
+  timeline       OrderTimeline[]
+  invoice        Invoice?
+}
+
+model OrderItem {
+  id        String  @id @default(cuid())
+  orderId   String
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+  quantity  Int
+  unitPrice Float
+}
+
+model OrderTimeline {
+  id          String   @id @default(cuid())
+  orderId     String
+  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  event       String
+  description String?
+  timestamp   DateTime @default(now())
+}
+
+model ContentSection {
+  id          String        @id @default(cuid())
+  slug        String        @unique
+  title       String
+  fields      Json
+  status      ContentStatus @default(DRAFT)
+  publishedAt DateTime?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+model Settings {
+  id    String @id @default(cuid())
+  key   String @unique
+  value Json
+}
+
+model Invoice {
+  id            String   @id @default(cuid())
+  orderId       String   @unique
+  order         Order    @relation(fields: [orderId], references: [id])
+  invoiceNumber String   @unique
+  dueDate       DateTime
+  terms         String   @default("Net 15")
+  paymentMethod String   @default("Bank Transfer")
+  createdAt     DateTime @default(now())
+}

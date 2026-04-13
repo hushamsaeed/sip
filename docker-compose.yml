@@ -1,0 +1,36 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: sip_db
+      POSTGRES_USER: sip
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-sip_password_2025}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sip -d sip_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "${APP_PORT:-3000}:3000"
+    environment:
+      DATABASE_URL: "postgresql://sip:${POSTGRES_PASSWORD:-sip_password_2025}@db:5432/sip_db"
+      AUTH_SECRET: "${AUTH_SECRET:-sip-elact-production-secret-2025}"
+      AUTH_URL: "${AUTH_URL:-https://elact.thecrayfish.tech}"
+      NEXTAUTH_URL: "${NEXTAUTH_URL:-https://elact.thecrayfish.tech}"
+      AUTH_TRUST_HOST: "true"
+    volumes:
+      - uploads:/app/public/uploads
+
+volumes:
+  postgres_data:
+  uploads:

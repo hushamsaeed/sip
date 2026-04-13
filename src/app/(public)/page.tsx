@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import Image from "next/image";
 import { Wine, Ship, Award, Thermometer, Warehouse, Truck } from "lucide-react";
 import { prisma } from "@/lib/db";

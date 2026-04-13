@@ -27,6 +27,9 @@ ENV NODE_ENV=production
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
+# Install prisma CLI for migrations
+RUN npm install -g prisma@6
+
 # Copy built assets
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
@@ -45,9 +48,7 @@ EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
-# Copy prisma CLI from builder
-COPY --from=builder /app/node_modules/prisma ./node_modules/prisma
-COPY --from=builder /app/node_modules/.bin/prisma ./node_modules/.bin/prisma
+COPY --from=builder /app/scripts ./scripts
 
 # Run migrations and start
-CMD ["sh", "-c", "./node_modules/.bin/prisma db push --skip-generate && node server.js"]
+CMD ["sh", "/app/scripts/start.sh"]

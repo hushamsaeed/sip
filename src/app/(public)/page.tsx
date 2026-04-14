@@ -1,7 +1,18 @@
 export const dynamic = "force-dynamic";
 
 import Image from "next/image";
-import { Wine, Ship, Award, Thermometer, Warehouse, Truck } from "lucide-react";
+import {
+  Ship,
+  Warehouse as WarehouseIcon,
+  Sun,
+  Lock,
+  ScanBarcode,
+  Waves,
+  Gem,
+  Anchor,
+  Mail,
+  MapPin,
+} from "lucide-react";
 import { prisma } from "@/lib/db";
 
 async function getContent() {
@@ -18,21 +29,7 @@ async function getContent() {
 export default async function HomePage() {
   const content = await getContent();
   const hero = content.hero || {};
-  const about = content.about || {};
-  const infra = content.infrastructure || {};
   const contact = content.contact || {};
-
-  const features = (about.features as Array<{title: string; description: string; icon: string}>) || [
-    { title: "Curated Portfolio", description: "Hand-selected premium spirits from renowned distilleries worldwide.", icon: "wine" },
-    { title: "Island-First Logistics", description: "Purpose-built cold chain logistics designed for atoll-to-atoll delivery.", icon: "ship" },
-    { title: "White-Glove Service", description: "Dedicated account managers for each resort partner.", icon: "award" },
-  ];
-
-  const featureIcons: Record<string, React.ReactNode> = {
-    wine: <Wine className="w-8 h-8 text-sip-amber" />,
-    ship: <Ship className="w-8 h-8 text-sip-amber" />,
-    award: <Award className="w-8 h-8 text-sip-amber" />,
-  };
 
   return (
     <>
@@ -40,55 +37,96 @@ export default async function HomePage() {
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0">
           <Image
-            src={(hero.backgroundImage as string) || "/images/generated-1776098089280.png"}
+            src={(hero.backgroundImage as string) || "/images/generated-1776099099695.png"}
             alt="SIP Hero"
             fill
             className="object-cover"
             priority
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-sip-bg-primary/60 via-sip-bg-primary/30 to-sip-bg-primary" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,#070F1C90_0%,#070F1CCC_100%)]" />
         </div>
-        <div className="relative z-10 text-center max-w-3xl px-6">
-          <h1 className="font-heading text-5xl md:text-7xl font-bold text-white mb-6 italic">
+        <div className="relative z-10 text-center max-w-4xl px-6">
+          <h1 className="font-heading text-5xl md:text-7xl font-bold text-white mb-7 italic leading-tight">
             {(hero.headline as string) || "Paradise Poured to Perfection"}
           </h1>
-          <p className="text-lg text-white/80 mb-8 max-w-2xl mx-auto">
-            {(hero.subtitle as string) || "The Maldives' exclusive premium spirits distributor — delivering world-class beverages to luxury resorts & liveaboards across the archipelago."}
+          <p className="text-[17px] text-white/70 mb-8 max-w-2xl mx-auto leading-relaxed">
+            {(hero.subtitle as string) ||
+              "The Maldives' exclusive premium spirits distributor — delivering world-class beverages to luxury resorts & liveaboards across the archipelago."}
           </p>
           <a
             href={(hero.ctaLink as string) || "#about"}
-            className="inline-block bg-sip-amber hover:bg-sip-amber/90 text-sip-bg-primary font-semibold px-8 py-3.5 rounded-lg transition-colors text-lg"
+            className="inline-block bg-sip-amber hover:bg-sip-amber/90 text-sip-bg-primary font-semibold px-8 py-3.5 rounded transition-colors"
           >
             {(hero.ctaText as string) || "Explore Our Collection"}
           </a>
         </div>
       </section>
 
-      {/* About Section */}
-      <section id="about" className="py-20 px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="font-heading text-4xl font-bold text-white mb-4 italic">
-              {(about.headline as string) || "Born from the Indian Ocean"}
-            </h2>
-            <p className="text-sip-text-secondary max-w-2xl mx-auto">
-              {(about.description as string) || "SIP was founded with a singular vision — to bring the world's finest spirits to the most exclusive destinations in the Maldives."}
-            </p>
+      {/* About & Services Section */}
+      <section id="about" className="py-20 lg:py-24 px-6 lg:px-16 bg-sip-bg-secondary">
+        <div className="max-w-[1280px] mx-auto space-y-20">
+          {/* About Row: Text + Image */}
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div className="space-y-6">
+              <h2 className="font-heading text-4xl lg:text-[44px] font-medium text-white leading-tight">
+                Born from the Indian Ocean
+              </h2>
+              <p className="text-sip-text-secondary text-base leading-[1.7]">
+                Founded to serve the unique needs of the Maldivian archipelago&apos;s
+                world-renowned luxury hospitality sector, SIP was born from a
+                vision to deliver the finest spirits across turquoise waters.
+                Operating from our state-of-the-art bonded warehouse, we curate
+                premium beverages for the most exclusive resorts on earth.
+              </p>
+              <p className="text-sip-text-muted text-base leading-[1.7]">
+                From the atolls of the north to the southern reaches of the
+                archipelago, we are partners in crafting unforgettable guest
+                experiences — ensuring every pour meets the exacting standards of
+                Maldivian luxury hospitality.
+              </p>
+            </div>
+            <div className="relative h-[400px] rounded-xl overflow-hidden">
+              <Image
+                src="/images/generated-1776099117486.png"
+                alt="About SIP"
+                fill
+                className="object-cover"
+              />
+            </div>
           </div>
-          <div className="grid md:grid-cols-3 gap-8">
-            {features.map((feature, i) => (
+
+          {/* Services Row: 3 Cards */}
+          <div className="grid md:grid-cols-3 gap-6">
+            {[
+              {
+                icon: <Ship className="w-10 h-10 text-sip-amber" />,
+                title: "Import & Distribution",
+                description:
+                  "Curating and importing the world's most prestigious spirits, wines, and champagnes — delivered directly to Maldivian shores from renowned producers across the globe.",
+              },
+              {
+                icon: <WarehouseIcon className="w-10 h-10 text-sip-amber" />,
+                title: "Bonded Warehouse",
+                description:
+                  "Climate-controlled bonded warehouse facility on Thilafushi, ensuring optimal storage conditions and full regulatory compliance for all imported premium beverages.",
+              },
+              {
+                icon: <Ship className="w-10 h-10 text-sip-amber" />,
+                title: "Resort Supply Chain",
+                description:
+                  "Island-to-island delivery network spanning the archipelago — from seaplane logistics to speedboat transfers, we reach every atoll and resort with precision and care.",
+              },
+            ].map((service, i) => (
               <div
                 key={i}
-                className="bg-sip-card border border-sip-border-card rounded-xl p-8 text-center hover:border-sip-amber/30 transition-colors"
+                className="bg-sip-card border border-sip-border-card rounded-xl p-8 space-y-4"
               >
-                <div className="flex justify-center mb-4">
-                  {featureIcons[feature.icon] || <Wine className="w-8 h-8 text-sip-amber" />}
-                </div>
-                <h3 className="text-white font-semibold text-lg mb-2">
-                  {feature.title}
+                {service.icon}
+                <h3 className="font-heading text-[22px] font-medium text-white">
+                  {service.title}
                 </h3>
-                <p className="text-sip-text-secondary text-sm">
-                  {feature.description}
+                <p className="text-sip-text-secondary text-sm leading-relaxed">
+                  {service.description}
                 </p>
               </div>
             ))}
@@ -97,68 +135,100 @@ export default async function HomePage() {
       </section>
 
       {/* Infrastructure Section */}
-      <section id="infrastructure" className="py-20 px-6 bg-sip-bg-secondary">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="font-heading text-4xl font-bold text-white mb-4 italic">
-              {(infra.headline as string) || "Island-Grade Infrastructure"}
+      <section id="infrastructure" className="py-20 lg:py-24 px-6 lg:px-[120px] bg-sip-bg-secondary">
+        <div className="max-w-[1280px] mx-auto space-y-16">
+          {/* Header */}
+          <div className="text-center space-y-4">
+            <h2 className="font-heading text-4xl lg:text-5xl font-bold text-white italic">
+              Island-Grade Infrastructure
             </h2>
-            <p className="text-sip-text-secondary max-w-2xl mx-auto">
-              {(infra.description as string) || "State-of-the-art temperature-controlled warehousing and speedboat logistics network spanning the Maldives."}
+            <p className="text-sip-text-secondary text-[17px] max-w-2xl mx-auto leading-relaxed">
+              State-of-the-art temperature-controlled warehousing and speedboat
+              logistics network spanning the Maldives.
             </p>
           </div>
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="relative h-80 rounded-xl overflow-hidden">
+
+          {/* Content: Large Image + Feature Cards */}
+          <div className="grid lg:grid-cols-2 gap-8">
+            {/* Large Warehouse Image */}
+            <div className="relative h-[500px] rounded-xl overflow-hidden">
               <Image
-                src="/images/generated-1776098164007.png"
-                alt="Infrastructure"
+                src="/images/generated-1776099077824.png"
+                alt="Bonded Warehouse"
                 fill
                 className="object-cover"
               />
             </div>
-            <div className="relative h-80 rounded-xl overflow-hidden">
-              <Image
-                src="/images/generated-1776098180610.png"
-                alt="Logistics"
-                fill
-                className="object-cover"
-              />
-            </div>
-          </div>
-          <div className="grid grid-cols-3 gap-6 mt-8">
-            <div className="bg-sip-card border border-sip-border-card rounded-xl p-6 flex items-center gap-4">
-              <Thermometer className="w-8 h-8 text-sip-blue" />
-              <div>
-                <p className="text-white font-semibold">16-22&deg;C</p>
-                <p className="text-sip-text-muted text-xs">Climate Controlled</p>
-              </div>
-            </div>
-            <div className="bg-sip-card border border-sip-border-card rounded-xl p-6 flex items-center gap-4">
-              <Warehouse className="w-8 h-8 text-sip-teal" />
-              <div>
-                <p className="text-white font-semibold">10,000+ Units</p>
-                <p className="text-sip-text-muted text-xs">Storage Capacity</p>
-              </div>
-            </div>
-            <div className="bg-sip-card border border-sip-border-card rounded-xl p-6 flex items-center gap-4">
-              <Truck className="w-8 h-8 text-sip-amber" />
-              <div>
-                <p className="text-white font-semibold">Daily Deliveries</p>
-                <p className="text-sip-text-muted text-xs">Speedboat Network</p>
-              </div>
+
+            {/* Feature Cards */}
+            <div className="space-y-5">
+              {[
+                {
+                  icon: <Sun className="w-6 h-6 text-sip-amber" />,
+                  title: "Climate-Controlled Storage",
+                  description:
+                    "Tropical-grade temperature and humidity management, protecting premium spirits from the Maldivian heat across every atoll delivery.",
+                },
+                {
+                  icon: <Lock className="w-6 h-6 text-sip-amber" />,
+                  title: "Bonded Warehouse Security",
+                  description:
+                    "Fully compliant bonded facility at the heart of Malé, meeting international standards for secure beverage storage and customs clearance.",
+                },
+                {
+                  icon: <ScanBarcode className="w-6 h-6 text-sip-amber" />,
+                  title: "Smart Inventory Tracking",
+                  description:
+                    "Real-time visibility across our entire catalogue — track orders from warehouse to seaplane to your resort's bar counter.",
+                },
+                {
+                  icon: <Waves className="w-6 h-6 text-sip-amber" />,
+                  title: "Archipelago-Scale Capacity",
+                  description:
+                    "Built to serve the full Maldivian hospitality sector — from intimate boutique resorts to the largest luxury chains across 26 atolls.",
+                },
+              ].map((feature, i) => (
+                <div
+                  key={i}
+                  className="bg-sip-card border border-sip-border-card rounded-lg p-6 flex items-start gap-5"
+                >
+                  <div className="w-14 h-14 rounded-full bg-sip-amber/10 flex items-center justify-center shrink-0">
+                    {feature.icon}
+                  </div>
+                  <div className="space-y-1.5">
+                    <h3 className="text-white font-semibold text-[17px]">
+                      {feature.title}
+                    </h3>
+                    <p className="text-sip-text-secondary text-sm leading-relaxed">
+                      {feature.description}
+                    </p>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="py-20 px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="font-heading text-4xl font-bold text-white mb-4 italic">
+      {/* Why Choose SIP Section */}
+      <section className="py-24 lg:py-[100px] px-6 lg:px-[120px]">
+        <div className="max-w-[1280px] mx-auto space-y-16">
+          {/* Header */}
+          <div className="text-center space-y-4">
+            <p className="text-sip-amber font-mono text-[13px] tracking-[3px] font-medium">
+              WHY CHOOSE SIP
+            </p>
+            <h2 className="font-heading text-4xl lg:text-5xl font-bold text-white">
               The Maldives&apos; Most Trusted Pour
             </h2>
+            <p className="text-sip-text-secondary text-[17px] max-w-[720px] mx-auto leading-relaxed">
+              From Malé to the most remote atoll, we combine deep local knowledge
+              with world-class logistics to keep the finest spirits flowing across
+              the Maldivian archipelago.
+            </p>
           </div>
+
+          {/* Stats Row */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {[
               { value: "100+", label: "Resort Partners", color: "text-sip-amber" },
@@ -177,24 +247,77 @@ export default async function HomePage() {
               </div>
             ))}
           </div>
+
+          {/* Pillars Row */}
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              {
+                icon: <Gem className="w-8 h-8 text-sip-amber" />,
+                title: "World-Class Selection",
+                description:
+                  "Curated for Maldivian luxury — we partner with renowned distilleries and vineyards to bring the world's finest spirits to your island paradise.",
+                gradient: "from-[#F59E0B12] to-transparent",
+              },
+              {
+                icon: <Ship className="w-8 h-8 text-sip-blue" />,
+                title: "Island-to-Island Logistics",
+                description:
+                  "Seaplane, speedboat, or cargo vessel — our logistics network reaches every inhabited and resort island in the Maldivian archipelago, on time, every time.",
+                gradient: "from-[#0EA5E912] to-transparent",
+              },
+              {
+                icon: <Anchor className="w-8 h-8 text-sip-teal" />,
+                title: "Malé Hub Advantage",
+                description:
+                  "Strategically located in the capital, our bonded warehouse sits at the crossroads of the Maldives' supply chain — connecting global imports to 1,200+ islands.",
+                gradient: "from-[#2DD4BF12] to-transparent",
+              },
+            ].map((pillar, i) => (
+              <div
+                key={i}
+                className={`bg-gradient-to-b ${pillar.gradient} border border-sip-border-card rounded-xl p-8 space-y-4`}
+              >
+                {pillar.icon}
+                <h3 className="text-white font-semibold text-lg">
+                  {pillar.title}
+                </h3>
+                <p className="text-sip-text-secondary text-sm leading-relaxed">
+                  {pillar.description}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section id="contact" className="py-20 px-6 bg-sip-bg-secondary">
-        <div className="max-w-3xl mx-auto text-center">
-          <h2 className="font-heading text-4xl font-bold text-white mb-4 italic">
-            {(contact.ctaHeadline as string) || "Ready to Elevate Your Island Experience?"}
+      <section
+        id="contact"
+        className="py-24 lg:py-[100px] px-6 lg:px-[120px] bg-gradient-to-b from-sip-bg-primary via-[#0B2A4A] to-sip-bg-primary"
+      >
+        <div className="max-w-[800px] mx-auto text-center space-y-8">
+          <h2 className="font-heading text-4xl lg:text-[44px] font-bold text-white leading-[1.2] italic">
+            {(contact.ctaHeadline as string) ||
+              "Ready to Elevate Your\nIsland Experience?"}
           </h2>
-          <p className="text-sip-text-secondary mb-8">
-            {(contact.ctaDescription as string) || "Partner with SIP to bring world-class spirits to your resort or liveaboard."}
+          <p className="text-sip-text-secondary text-[17px] max-w-[640px] mx-auto leading-relaxed">
+            {(contact.ctaDescription as string) ||
+              "Partner with the Maldives' most trusted premium beverage distributor. Let's craft the perfect collection for your resort or liveaboard, delivered across the archipelago."}
           </p>
-          <a
-            href={(contact.ctaButtonLink as string) || "mailto:sales@elact.co"}
-            className="inline-block bg-sip-amber hover:bg-sip-amber/90 text-sip-bg-primary font-semibold px-8 py-3.5 rounded-lg transition-colors text-lg"
-          >
-            {(contact.ctaButtonText as string) || "Get in Touch"}
-          </a>
+          <div className="flex items-center justify-center gap-4">
+            <a
+              href={(contact.ctaButtonLink as string) || "mailto:sales@elact.co"}
+              className="bg-sip-amber hover:bg-sip-amber/90 text-sip-bg-primary font-semibold px-8 py-4 rounded transition-colors"
+            >
+              Contact Sales
+            </a>
+            <a
+              href="#about"
+              className="border border-sip-text-secondary text-white font-medium px-8 py-4 rounded hover:border-white transition-colors"
+            >
+              View Catalogue
+            </a>
+          </div>
         </div>
       </section>
     </>

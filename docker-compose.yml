@@ -25,8 +25,8 @@ services:
     environment:
       DATABASE_URL: "postgresql://sip:${POSTGRES_PASSWORD:-sip_password_2025}@db:5432/sip_db"
       AUTH_SECRET: "${AUTH_SECRET:-sip-elact-production-secret-2025}"
-      AUTH_URL: "${AUTH_URL:-https://elact.thecrayfish.tech}"
-      NEXTAUTH_URL: "${NEXTAUTH_URL:-https://elact.thecrayfish.tech}"
+      AUTH_URL: "${AUTH_URL:-https://sip.mv}"
+      NEXTAUTH_URL: "${NEXTAUTH_URL:-https://sip.mv}"
       AUTH_TRUST_HOST: "true"
     volumes:
       - uploads:/app/public/uploads
@@ -35,11 +35,13 @@ services:
       - dokploy-network
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.sip.rule=Host(`elact.thecrayfish.tech`)"
+      # Primary domain: sip.mv
+      - "traefik.http.routers.sip.rule=Host(`sip.mv`) || Host(`elact.thecrayfish.tech`)"
       - "traefik.http.routers.sip.entrypoints=websecure"
       - "traefik.http.routers.sip.tls.certresolver=letsencrypt"
       - "traefik.http.services.sip.loadbalancer.server.port=3000"
-      - "traefik.http.routers.sip-http.rule=Host(`elact.thecrayfish.tech`)"
+      # HTTP -> HTTPS redirect for both domains
+      - "traefik.http.routers.sip-http.rule=Host(`sip.mv`) || Host(`elact.thecrayfish.tech`)"
       - "traefik.http.routers.sip-http.entrypoints=web"
       - "traefik.http.routers.sip-http.middlewares=redirect-to-https"
       - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"

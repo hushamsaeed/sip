@@ -39,8 +39,8 @@ export default function LoginPage() {
       {/* Left Panel - Image */}
       <div className="hidden lg:block w-1/2 relative">
         <Image
-          src="/images/generated-1776099319367.png"
-          alt="Maldives Resort"
+          src="/images/login-maldives.jpg"
+          alt="Maldives overwater villa at twilight"
           fill
           className="object-cover"
           priority

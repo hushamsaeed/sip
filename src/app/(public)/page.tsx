@@ -37,7 +37,7 @@ export default async function HomePage() {
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0">
           <Image
-            src={(hero.backgroundImage as string) || "/images/generated-1776099099695.png"}
+            src={(hero.backgroundImage as string) || "/images/hero-maldives.jpg"}
             alt="SIP Hero"
             fill
             className="object-cover"
@@ -87,8 +87,8 @@ export default async function HomePage() {
             </div>
             <div className="relative h-[400px] rounded-xl overflow-hidden">
               <Image
-                src="/images/generated-1776099117486.png"
-                alt="About SIP"
+                src="/images/about-maldives.jpg"
+                alt="Maldives luxury resort aerial view"
                 fill
                 className="object-cover"
               />
@@ -153,8 +153,8 @@ export default async function HomePage() {
             {/* Large Warehouse Image */}
             <div className="relative h-[500px] rounded-xl overflow-hidden">
               <Image
-                src="/images/generated-1776099077824.png"
-                alt="Bonded Warehouse"
+                src="/images/warehouse-interior.jpg"
+                alt="Climate-controlled bonded warehouse"
                 fill
                 className="object-cover"
               />
@@ -208,6 +208,17 @@ export default async function HomePage() {
             </div>
           </div>
         </div>
+      </section>
+
+      {/* Speedboat Delivery Banner */}
+      <section className="relative h-[400px] overflow-hidden">
+        <Image
+          src="/images/speedboat-delivery.jpg"
+          alt="Speedboat delivery across the Maldives"
+          fill
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-sip-bg-secondary via-transparent to-sip-bg-primary" />
       </section>
 
       {/* Why Choose SIP Section */}
@@ -293,9 +304,18 @@ export default async function HomePage() {
       {/* CTA Section */}
       <section
         id="contact"
-        className="py-24 lg:py-[100px] px-6 lg:px-[120px] bg-gradient-to-b from-sip-bg-primary via-[#0B2A4A] to-sip-bg-primary"
+        className="relative py-24 lg:py-[100px] px-6 lg:px-[120px] overflow-hidden"
       >
-        <div className="max-w-[800px] mx-auto text-center space-y-8">
+        <div className="absolute inset-0">
+          <Image
+            src="/images/spirits-sunset.jpg"
+            alt="Premium spirits"
+            fill
+            className="object-cover"
+          />
+          <div className="absolute inset-0 bg-sip-bg-primary/85 backdrop-blur-sm" />
+        </div>
+        <div className="relative z-10 max-w-[800px] mx-auto text-center space-y-8">
           <h2 className="font-heading text-4xl lg:text-[44px] font-bold text-white leading-[1.2] italic">
             {(contact.ctaHeadline as string) ||
               "Ready to Elevate Your\nIsland Experience?"}
